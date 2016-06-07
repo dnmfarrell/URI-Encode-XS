@@ -1,0 +1,43 @@
+=head1 NAME
+
+URI::Encode::XS - a naive URI encoder/decoder using C
+
+=head1 SYNOPSIS
+
+  use URI::Encode::XS;
+
+  my $encoded = URI::Encode::XS::uri_encode($data);
+  my $decoded = URI::Encode::XS::uri_decode($encoded);
+
+=head1 DESCRIPTION
+
+This is a Perl module that wraps my naive C URI encoder/decoder based on
+L<RFC3986|https://tools.ietf.org/html/rfc3986>.
+
+Even though it's C based, I found the performance to be only 20% better than
+native Perl encoding via C<URI::Escape>. I think this points to Perl's fast
+string implementation. You can compare the performence by running C<bench>
+(included in this repo):
+
+  $ perl bench
+
+For a really faster encoder, check out C<URI::XSEscape|https://metacpan.org/pod/URI::XSEscape>.
+
+=head1 INSTALLATION
+
+  $ git clone https://github.com/dnmfarrell/URI-Encode-XS
+  $ cd URI-Encode-XS
+  $ perl Makefile.PL
+  $ make
+  $ make test
+  $ make install
+
+=head1 LICENSE
+
+See LICENSE
+
+=head1 AUTHOR
+
+E<copy> 2016 David Farrell
+
+=cut

@@ -1,0 +1,9 @@
+#!/usr/bin/env perl
+use Benchmark 'cmpthese';
+use URI::Escape;
+use URI::Encode::XS;
+
+cmpthese(-10, {
+    escape => sub { URI::Escape::uri_escape('https://stackoverflow.com/questions/3629212/how-can-perls-xsub-die') },
+    encode => sub { URI::Encode::XS::uri_encode('https://stackoverflow.com/questions/3629212/how-can-perls-xsub-die') },
+  });
