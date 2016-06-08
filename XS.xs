@@ -34,65 +34,41 @@ static char* uri_encode_tbl[256] =
     "%F0", "%F1", "%F2", "%F3", "%F4", "%F5", "%F6", "%F7", "%F8", "%F9", "%FA", "%FB", "%FC", "%FD", "%FE", "%FF",  /* F: 240 ~ 255 */
 };
 
-// calc a large enough buffer to store encoding
-int calc_buffer_size (char *uri)
+char *uri_encode (char *uri, char *buffer)
 {
-  int buffer_size = strlen(uri) * 3 + 1;
-  return buffer_size;
-}
-
-// generic percent-encoding algorithm
-char *encode (char *uri, char *buffer)
-{
+  unsigned char *uuri = (unsigned char*)uri;
   int i = 0;
-  while (uri[i] != '\0')
+  while (uuri[i] != '\0')
   {
-    strcat(buffer, uri_encode_tbl[ (unsigned char)uri[i] ]);
+    strcat(buffer, uri_encode_tbl[ uuri[i] ]);
     i++;
   }
   return buffer;
 }
 
-char *decode (char *uri, char *buffer)
+char *uri_decode (char *uri, char *buffer)
 {
-  int i = 0;
-
+  int i = 0, j = 0;
+  char code[3];
   while(uri[i] != '\0')
   {
     if(uri[i] == '%')
     {
-      i++;
-      char code[3];
-      code[0] = uri[i++];
-      code[1] = uri[i++];
+      code[0] = uri[i+1];
+      code[1] = uri[i+2];
       code[2] = '\0';
-
-      int decimal = (int)strtol(code, NULL, 16);
-
-      char decode[2];
-      decode[0] = decimal;
-      decode[1] = '\0';
-      strcat(buffer, decode);
+      buffer[j] = (unsigned char)strtol(code, NULL, 16);
+      i += 3;
     }
     else
     {
-      char code[2];
-      code[0] = uri[i++];
-      code[1] = '\0';
-      strcat(buffer, code);
+      buffer[j] = uri[i];
+      i++;
     }
+    j++;
   }
+  buffer[j] = '\0';
   return buffer;
-}
-
-char *uri_encode (char *uri, char *buffer)
-{
-  return encode(uri, buffer);
-}
-
-char *uri_decode (char *uri, char *buffer)
-{
-  return decode(uri, buffer);
 }
 
 MODULE = URI::Encode::XS      PACKAGE = URI::Encode::XS
@@ -106,7 +82,7 @@ uri_encode(char *uri)
         {
           croak("uri_encode() requires a scalar argument to encode!");
         }
-        char buffer[ calc_buffer_size(uri) ];
+        char buffer[ strlen(uri) * 3 + 1 ];
         buffer[0] = '\0';
         uri_encode(uri, buffer);
         RETVAL = buffer;
