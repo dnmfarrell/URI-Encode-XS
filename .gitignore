@@ -3,3 +3,4 @@
 *.swo
 Makefile
 MYMETA*
+*.tar.gz
