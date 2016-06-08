@@ -1,7 +1,6 @@
 #!/usr/bin/env perl
 use Benchmark 'cmpthese';
 use URI::Escape;
-use URI::XSEscape;
 use URI::Encode::XS;
 
 cmpthese(-10, {
