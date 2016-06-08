@@ -1,21 +1,21 @@
 =head1 NAME
 
-URI::Encode::XS - a naive URI encoder/decoder using C
+URI::Encode::XS - a Perl URI encoder/decoder using C
 
 =head1 SYNOPSIS
 
   use URI::Encode::XS qw/uri_encode uri_decode/;
 
-  my $encoded = URI::Encode::XS::uri_encode($data);
-  my $decoded = URI::Encode::XS::uri_decode($encoded);
+  my $encoded = uri_encode($data);
+  my $decoded = uri_decode($encoded);
 
 =head1 DESCRIPTION
 
 This is a Perl module that wraps my C URI encoder/decoder based on
 L<RFC3986|https://tools.ietf.org/html/rfc3986>.
 
-I've benchmarked it for one string and found it significantly faster than
-URI::Escape at encoding and decoding:
+I've benchmarked it and found it significantly faster than URI::Escape at
+encoding and decoding:
 
   $ perl bench
              Rate escape encode
@@ -30,7 +30,7 @@ in the string, the closer the benchmark is likely to be (see C<bench> for
 details). Different hardware will yield different results.
 
 For a faster encoder/decoder which supports custom escape lists, check out
-C<URI::XSEscape|https://metacpan.org/pod/URI::XSEscape>.
+L<URI::XSEscape|https://metacpan.org/pod/URI::XSEscape>.
 
 =head1 INSTALLATION
 
