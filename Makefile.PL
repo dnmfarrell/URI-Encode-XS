@@ -9,4 +9,5 @@ WriteMakefile(
     LIBS           => [''],
     DEFINE         => '',
     INC            => '-I.',
+    LICENSE        => 'freebsd',
 );
