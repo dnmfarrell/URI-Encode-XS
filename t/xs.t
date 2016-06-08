@@ -12,7 +12,6 @@ subtest encode => sub {
   # from URI::Escape t/escape.t
   is uri_encode("~*'()"), "~%2A%27%28%29";
   is uri_encode("<\">"), "%3C%22%3E";
-
 };
 
 subtest decode => sub {
@@ -24,6 +23,10 @@ subtest decode => sub {
 };
 
 subtest exceptions => sub {
+  eval { URI::Encode::XS::uri_encode('') };
+  like $@, qr/uri_encode\(\) requires a scalar argument to encode!/, 'croak on empty string';
+  eval { URI::Encode::XS::uri_decode('') };
+  like $@, qr/uri_decode\(\) requires a scalar argument to decode!/, 'croak on empty string';
   eval { URI::Encode::XS::uri_encode(undef) };
   like $@, qr/uri_encode\(\) requires a scalar argument to encode!/, 'croak on undef';
   eval { URI::Encode::XS::uri_decode(undef) };

@@ -34,6 +34,16 @@ static char* uri_encode_tbl[256] =
     "%F0", "%F1", "%F2", "%F3", "%F4", "%F5", "%F6", "%F7", "%F8", "%F9", "%FA", "%FB", "%FC", "%FD", "%FE", "%FF",  /* F: 240 ~ 255 */
 };
 
+/* https://stackoverflow.com/questions/10324/convert-a-hexadecimal-string-to-an-integer-efficiently-in-c
+ * thanks to Orwellophile
+*/
+static const long hextable[] = {
+   [0 ... 255] = -1, // bit aligned access into this table is considerably
+   ['0'] = 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, // faster for most modern processors,
+   ['A'] = 10, 11, 12, 13, 14, 15,       // for the space conscious, reduce to
+   ['a'] = 10, 11, 12, 13, 14, 15        // signed char.
+};
+
 char *uri_encode (char *uri, char *buffer)
 {
   unsigned char *uuri = (unsigned char*)uri;
@@ -60,15 +70,12 @@ char *uri_encode (char *uri, char *buffer)
 char *uri_decode (char *uri, char *buffer)
 {
   int i = 0, j = 0;
-  char code[3];
   while(uri[i] != '\0')
   {
     if(uri[i] == '%')
     {
-      code[0] = uri[i+1];
-      code[1] = uri[i+2];
-      code[2] = '\0';
-      buffer[j] = (unsigned char)strtol(code, NULL, 16);
+      /* thanks to Jesse DuMond */
+      buffer[j] = (hextable[ uri[i+1] ] << 4) | hextable[ uri[i+2] ];
       i += 3;
     }
     else
@@ -89,7 +96,7 @@ PROTOTYPES: ENABLED
 char *
 uri_encode(char *uri)
     CODE:
-        if (strlen(uri) == 0)
+        if (!uri || *uri == '\0')
         {
           croak("uri_encode() requires a scalar argument to encode!");
         }
@@ -102,7 +109,7 @@ uri_encode(char *uri)
 char *
 uri_decode(char *uri)
     CODE:
-        if (strlen(uri) == 0)
+        if (!uri || *uri == '\0')
         {
           croak("uri_decode() requires a scalar argument to decode!");
         }

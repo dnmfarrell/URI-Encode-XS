@@ -18,21 +18,25 @@ encodes characters that are not unreserved.
 I've benchmarked it and found it significantly faster than URI::Escape at
 encoding and decoding:
 
-              Rate escape encode
-escape    142861/s     --   -96%
-encode   3685811/s  2480%     --
+            Rate escape encode
+escape  141724/s     --   -96%
+encode 3491116/s  2363%     --
               Rate unescape   decode
-unescape  197481/s       --     -94%
-decode   3101884/s    1471%       --
+unescape  193807/s       --     -96%
+decode   4835488/s    2395%       --
 
 However this is just one string - the fewer encoded/decoded characters are
 in the string, the closer the benchmark is likely to be (see C<bench> for
-details). Different hardware will yield different results.
+details of the benchmark). Different hardware will yield different results.
 
-For a fast encoder/decoder which supports custom escape lists, check out
+Another faster encoder/decoder which supports custom escape lists, is
 L<URI::XSEscape|https://metacpan.org/pod/URI::XSEscape>.
 
 =head1 INSTALLATION
+
+  $ cpan URI::Encode::XS
+
+Or
 
   $ git clone https://github.com/dnmfarrell/URI-Encode-XS
   $ cd URI-Encode-XS
