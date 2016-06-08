@@ -1,4 +1,5 @@
 use strict;
+use warnings;
 package URI::Encode::XS;
 
 use XSLoader;
@@ -57,6 +58,10 @@ Or
   $ make
   $ make test
   $ make install
+
+=head1 REPOSITORY
+
+L<https://github.com/dnmfarrell/URI-Encode-XS>
 
 =head1 LICENSE
 
