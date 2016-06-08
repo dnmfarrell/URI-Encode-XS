@@ -18,6 +18,7 @@ subtest decode => sub {
   is uri_decode("something"), 'something';
   is uri_decode("something%"), 'something', 'ignore trailing percent';
   is uri_decode('something%a'), 'somethinga', 'ignore trailing percent';
+  is uri_decode('something%Z/'), 'something', 'ignore invalid sequences';
   is uri_decode('%20'), ' ';
   is uri_decode("%7Cabc%C3%A5"), "|abcå";
   is uri_decode("~%2A%27%28%29"), "~*'()";

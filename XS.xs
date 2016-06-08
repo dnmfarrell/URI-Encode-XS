@@ -37,7 +37,7 @@ static char* uri_encode_tbl[256] =
 /* https://stackoverflow.com/questions/10324/convert-a-hexadecimal-string-to-an-integer-efficiently-in-c
  * thanks to Orwellophile
 */
-static const long hextable[] = {
+static const char hextable[] = {
    [0 ... 255] = -1, // bit aligned access into this table is considerably
    ['0'] = 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, // faster for most modern processors,
    ['A'] = 10, 11, 12, 13, 14, 15,       // for the space conscious, reduce to
@@ -71,6 +71,7 @@ char *uri_decode (char *uri, char *buffer)
 {
   int i = 0, j = 0;
   int len = strlen(uri);
+  unsigned char *uuri = (unsigned char*)uri;
   while(uri[i] != '\0')
   {
     if(uri[i] == '%')
@@ -78,9 +79,16 @@ char *uri_decode (char *uri, char *buffer)
       if (i + 2 < len)
       {
         /* thanks to Jesse DuMond */
-        buffer[j] = (hextable[ uri[i+1] ] << 4) | hextable[ uri[i+2] ];
+        char front = hextable[ uuri[i+1] ];
+        char back  = hextable[ uuri[i+2] ];
+
+        /* skip invalid hex sequences */
+        if (front >= 0 && back >= 0)
+        {
+          buffer[j] = front << 4 | back;
+          j++;
+        }
         i += 3;
-        j++;
       }
       /* skip trailing percent chars */
       else
@@ -90,7 +98,7 @@ char *uri_decode (char *uri, char *buffer)
     }
     else
     {
-      buffer[j] = uri[i];
+      buffer[j] = uuri[i];
       i++;
       j++;
     }
