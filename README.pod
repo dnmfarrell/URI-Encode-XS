@@ -4,7 +4,7 @@ URI::Encode::XS - a naive URI encoder/decoder using C
 
 =head1 SYNOPSIS
 
-  use URI::Encode::XS;
+  use URI::Encode::XS qw/uri_encode uri_decode/;
 
   my $encoded = URI::Encode::XS::uri_encode($data);
   my $decoded = URI::Encode::XS::uri_decode($encoded);
