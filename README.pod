@@ -29,7 +29,7 @@ However this is just one string - the fewer encoded/decoded characters are
 in the string, the closer the benchmark is likely to be (see C<bench> for
 details of the benchmark). Different hardware will yield different results.
 
-Another faster encoder/decoder which supports custom escape lists, is
+Another fast encoder/decoder which supports custom escape lists, is
 L<URI::XSEscape|https://metacpan.org/pod/URI::XSEscape>.
 
 =head1 INSTALLATION
