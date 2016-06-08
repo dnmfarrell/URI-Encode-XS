@@ -70,20 +70,30 @@ char *uri_encode (char *uri, char *buffer)
 char *uri_decode (char *uri, char *buffer)
 {
   int i = 0, j = 0;
+  int len = strlen(uri);
   while(uri[i] != '\0')
   {
     if(uri[i] == '%')
     {
-      /* thanks to Jesse DuMond */
-      buffer[j] = (hextable[ uri[i+1] ] << 4) | hextable[ uri[i+2] ];
-      i += 3;
+      if (i + 2 < len)
+      {
+        /* thanks to Jesse DuMond */
+        buffer[j] = (hextable[ uri[i+1] ] << 4) | hextable[ uri[i+2] ];
+        i += 3;
+        j++;
+      }
+      /* skip trailing percent chars */
+      else
+      {
+        i++;
+      }
     }
     else
     {
       buffer[j] = uri[i];
       i++;
+      j++;
     }
-    j++;
   }
   buffer[j] = '\0';
   return buffer;

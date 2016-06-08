@@ -5,7 +5,7 @@ package URI::Encode::XS;
 use XSLoader;
 use Exporter 5.57 'import';
 
-our $VERSION     = '0.04';
+our $VERSION     = '0.05';
 our @EXPORT_OK   = ( qw/uri_encode uri_decode/ );
 
 XSLoader::load('URI::Encode::XS', $VERSION);
@@ -33,11 +33,11 @@ I've benchmarked it and found it significantly faster than URI::Escape at
 encoding and decoding:
 
             Rate escape encode
-escape  141724/s     --   -96%
-encode 3491116/s  2363%     --
+escape  130275/s     --   -96%
+encode 3581667/s  2649%     --
               Rate unescape   decode
-unescape  193807/s       --     -96%
-decode   4835488/s    2395%       --
+unescape  189434/s       --     -96%
+decode   5161471/s    2625%       --
 
 However this is just one string - the fewer encoded/decoded characters are
 in the string, the closer the benchmark is likely to be (see C<bench> for
@@ -58,6 +58,10 @@ Or
   $ make
   $ make test
   $ make install
+
+=head1 THANKS
+
+Thanks to Jesse DuMond for helping optimize the C code.
 
 =head1 REPOSITORY
 
