@@ -7,9 +7,8 @@ use URI::Encode::XS qw/uri_encode uri_decode/;pass 'imported module';
 subtest encode => sub {
   is uri_encode("something"), 'something';
   is uri_encode(" "), '%20';
+  is uri_encode("%%20"), '%25%2520';
   is uri_encode("|abcå"), "%7Cabc%C3%A5";
-
-  # from URI::Escape t/escape.t
   is uri_encode("~*'()"), "~%2A%27%28%29";
   is uri_encode("<\">"), "%3C%22%3E";
 };
@@ -20,6 +19,7 @@ subtest decode => sub {
   is uri_decode('something%a'), 'somethinga', 'ignore trailing percent';
   is uri_decode('something%Z/'), 'something', 'ignore invalid sequences';
   is uri_decode('%20'), ' ';
+  is uri_decode('%25%2520'), "%%20";
   is uri_decode("%7Cabc%C3%A5"), "|abcå";
   is uri_decode("~%2A%27%28%29"), "~*'()";
   is uri_decode("%3C%22%3E"), "<\">";
