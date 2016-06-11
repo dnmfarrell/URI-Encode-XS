@@ -44,27 +44,27 @@ static const char hextable[] = {
    ['a'] = 10, 11, 12, 13, 14, 15        // signed char.
 };
 
-char *uri_encode (char *uri, char *buffer)
+size_t uri_encode (const char *uri, const size_t len, char *buffer)
 {
   unsigned char *uuri = (unsigned char*)uri;
-  int i = 0, j = 0;
-  while (uuri[i])
+  size_t i = 0, j = 0;
+  while (i < len)
   {
     char * code = uri_encode_tbl[ uuri[i] ];
     if (code)
     {
-      strcat(buffer, code);
+      memcpy(&buffer[j], code, 3);
       j += 3;
     }
     else
     {
       buffer[j] = uuri[i];
-      buffer[j+1] = '\0';
       j++;
     }
     i++;
   }
-  return buffer;
+  buffer[j] = '\0';
+  return j;
 }
 
 char *uri_decode (char *uri, char *buffer)
@@ -113,9 +113,7 @@ static void THX_uri_encode_dsv (pTHX_ const char *src, size_t len, SV *dsv)
 
   SvUPGRADE(dsv, SVt_PV);
   dst = SvGROW(dsv, len * 3 + 1);
-  memset(dst, 0, len * 3 + 1);
-  dst = uri_encode((char *)src, dst);
-  len = strlen(dst);
+  len = uri_encode(src, len, dst);
   SvCUR_set(dsv, len);
   SvPOK_only(dsv);
 }
