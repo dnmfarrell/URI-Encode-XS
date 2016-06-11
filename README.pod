@@ -48,9 +48,9 @@ Or
 
 =over4
 
-=item L<Christian Hansen|https://github.com/chansen>
+=item * L<Christian Hansen|https://github.com/chansen>
 
-=item Jesse DuMond
+=item * Jesse DuMond
 
 =back
 
