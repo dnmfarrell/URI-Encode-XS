@@ -107,33 +107,68 @@ char *uri_decode (char *uri, char *buffer)
   return buffer;
 }
 
+static void THX_uri_encode_dsv (pTHX_ const char *src, size_t len, SV *dsv)
+{
+  char *dst;
+
+  SvUPGRADE(dsv, SVt_PV);
+  dst = SvGROW(dsv, len * 3 + 1);
+  memset(dst, 0, len * 3 + 1);
+  dst = uri_encode((char *)src, dst);
+  len = strlen(dst);
+  SvCUR_set(dsv, len);
+  SvPOK_only(dsv);
+}
+
+static void THX_uri_decode_dsv (pTHX_ const char *src, size_t len, SV *dsv)
+{
+  char *dst;
+
+  SvUPGRADE(dsv, SVt_PV);
+  dst = SvGROW(dsv, len + 1);
+  dst = uri_decode((char *)src, dst);
+  len = strlen(dst);
+  SvCUR_set(dsv, len);
+  SvPOK_only(dsv);
+}
+
+#define uri_encode_dsv(src, len, dsv) \
+  THX_uri_encode_dsv(aTHX_ src, len, dsv)
+
+#define uri_decode_dsv(src, len, dsv) \
+  THX_uri_decode_dsv(aTHX_ src, len, dsv)
+
 MODULE = URI::Encode::XS      PACKAGE = URI::Encode::XS
 
 PROTOTYPES: ENABLED
 
-char *
-uri_encode(char *uri)
-    CODE:
-        if (!uri || *uri == '\0')
+void
+uri_encode(SV *uri)
+    PREINIT:
+        dXSTARG;
+        const char *src;
+        size_t len;
+    PPCODE:
+        src = SvPV_const(uri, len);
+        if (!len)
         {
           croak("uri_encode() requires a scalar argument to encode!");
         }
-        char buffer[ strlen(uri) * 3 + 1 ];
-        buffer[0] = '\0';
-        uri_encode(uri, buffer);
-        RETVAL = buffer;
-    OUTPUT: RETVAL
+        uri_encode_dsv(src, len, TARG);
+        PUSHTARG;
 
-char *
-uri_decode(char *uri)
-    CODE:
-        if (!uri || *uri == '\0')
+void
+uri_decode(SV *uri)
+    PREINIT:
+        dXSTARG;
+        const char *src;
+        size_t len;
+    PPCODE:
+        src = SvPV_const(uri, len);
+        if (!len)
         {
           croak("uri_decode() requires a scalar argument to decode!");
         }
-        char buffer[ strlen(uri) ];
-        buffer[0] = '\0';
-        uri_decode(uri, buffer);
-        RETVAL = buffer;
-    OUTPUT: RETVAL
+        uri_decode_dsv(src, len, TARG);
+        PUSHTARG;
 
