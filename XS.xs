@@ -154,7 +154,7 @@ uri_encode(SV *uri)
     size_t len;
   PPCODE:
     src = SvPV_const(uri, len);
-    if (!len)
+    if (!SvOK(uri))
     {
       croak("uri_encode() requires a scalar argument to encode!");
     }
@@ -169,7 +169,7 @@ uri_decode(SV *uri)
     size_t len;
   PPCODE:
     src = SvPV_const(uri, len);
-    if (!len)
+    if (!SvOK(uri))
     {
       croak("uri_decode() requires a scalar argument to decode!");
     }

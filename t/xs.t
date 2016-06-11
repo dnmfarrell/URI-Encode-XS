@@ -5,6 +5,7 @@ use Test::More;
 use URI::Encode::XS qw/uri_encode uri_decode/;pass 'imported module';
 
 subtest encode => sub {
+  is uri_encode(''), '';
   is uri_encode("something"), 'something';
   is uri_encode(" "), '%20';
   is uri_encode("%%20"), '%25%2520';
@@ -15,6 +16,7 @@ subtest encode => sub {
 };
 
 subtest decode => sub {
+  is uri_decode(''), '';
   is uri_decode("something"), 'something';
   is uri_decode("something%"), 'something', 'ignore trailing percent';
   is uri_decode('something%a'), 'somethinga', 'ignore trailing percent';
@@ -28,10 +30,6 @@ subtest decode => sub {
 };
 
 subtest exceptions => sub {
-  eval { URI::Encode::XS::uri_encode('') };
-  like $@, qr/uri_encode\(\) requires a scalar argument to encode!/, 'croak on empty string';
-  eval { URI::Encode::XS::uri_decode('') };
-  like $@, qr/uri_decode\(\) requires a scalar argument to decode!/, 'croak on empty string';
   eval { URI::Encode::XS::uri_encode(undef) };
   like $@, qr/uri_encode\(\) requires a scalar argument to encode!/, 'croak on undef';
   eval { URI::Encode::XS::uri_decode(undef) };
