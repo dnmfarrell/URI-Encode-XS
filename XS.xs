@@ -144,31 +144,31 @@ PROTOTYPES: ENABLED
 
 void
 uri_encode(SV *uri)
-    PREINIT:
-        dXSTARG;
-        const char *src;
-        size_t len;
-    PPCODE:
-        src = SvPV_const(uri, len);
-        if (!len)
-        {
-          croak("uri_encode() requires a scalar argument to encode!");
-        }
-        uri_encode_dsv(src, len, TARG);
-        PUSHTARG;
+  PREINIT:
+    dXSTARG;
+    const char *src;
+    size_t len;
+  PPCODE:
+    src = SvPV_const(uri, len);
+    if (!len)
+    {
+      croak("uri_encode() requires a scalar argument to encode!");
+    }
+    uri_encode_dsv(src, len, TARG);
+    PUSHTARG;
 
 void
 uri_decode(SV *uri)
-    PREINIT:
-        dXSTARG;
-        const char *src;
-        size_t len;
-    PPCODE:
-        src = SvPV_const(uri, len);
-        if (!len)
-        {
-          croak("uri_decode() requires a scalar argument to decode!");
-        }
-        uri_decode_dsv(src, len, TARG);
-        PUSHTARG;
+  PREINIT:
+    dXSTARG;
+    const char *src;
+    size_t len;
+  PPCODE:
+    src = SvPV_const(uri, len);
+    if (!len)
+    {
+      croak("uri_decode() requires a scalar argument to decode!");
+    }
+    uri_decode_dsv(src, len, TARG);
+    PUSHTARG;
 
