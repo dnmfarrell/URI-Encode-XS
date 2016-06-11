@@ -34,8 +34,8 @@ static const char* uri_encode_tbl[256] =
     "%F0", "%F1", "%F2", "%F3", "%F4", "%F5", "%F6", "%F7", "%F8", "%F9", "%FA", "%FB", "%FC", "%FD", "%FE", "%FF",  /* F: 240 ~ 255 */
 };
 
-#define __ -1
-static const char hextable[0x100] = {
+#define __ 0xFF
+static const unsigned char hexval[0x100] = {
   __,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__, /* 00-0F */
   __,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__, /* 10-1F */
   __,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__, /* 20-2F */
@@ -86,14 +86,13 @@ size_t uri_decode (const char *src, const size_t len, char *dst)
     {
       if (i + 2 < len)
       {
-        /* thanks to Jesse DuMond */
-        char front = hextable[ (unsigned char)src[i+1] ];
-        char back  = hextable[ (unsigned char)src[i+2] ];
+        const unsigned char v1 = hexval[ (unsigned char)src[i+1] ];
+        const unsigned char v2 = hexval[ (unsigned char)src[i+2] ];
 
         /* skip invalid hex sequences */
-        if (front >= 0 && back >= 0)
+        if ((v1 | v2) != 0xFF)
         {
-          dst[j] = front << 4 | back;
+          dst[j] = (v1 << 4) | v2;
           j++;
         }
         i += 3;
