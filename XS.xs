@@ -13,7 +13,7 @@
 */
 
 /* original by URI::XSEscape */
-static char* uri_encode_tbl[256] =
+static const char* uri_encode_tbl[256] =
 /*    0     1     2     3     4     5     6     7     8     9     a     b     c     d     e     f */
 {
     "%00", "%01", "%02", "%03", "%04", "%05", "%06", "%07", "%08", "%09", "%0A", "%0B", "%0C", "%0D", "%0E", "%0F",  /* 0:   0 ~  15 */
@@ -61,7 +61,7 @@ size_t uri_encode (const char *uri, const size_t len, char *buffer)
   size_t i = 0, j = 0;
   while (i < len)
   {
-    char * code = uri_encode_tbl[ uuri[i] ];
+    const char * code = uri_encode_tbl[ uuri[i] ];
     if (code)
     {
       memcpy(&buffer[j], code, 3);
