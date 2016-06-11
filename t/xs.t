@@ -11,6 +11,7 @@ subtest encode => sub {
   is uri_encode("|abcå"), "%7Cabc%C3%A5";
   is uri_encode("~*'()"), "~%2A%27%28%29";
   is uri_encode("<\">"), "%3C%22%3E";
+  is uri_encode("ABC\x00DEF"), "ABC%00DEF", 'constains encoded null character';
 };
 
 subtest decode => sub {
@@ -23,6 +24,7 @@ subtest decode => sub {
   is uri_decode("%7Cabc%C3%A5"), "|abcå";
   is uri_decode("~%2A%27%28%29"), "~*'()";
   is uri_decode("%3C%22%3E"), "<\">";
+  is uri_decode("ABC%00DEF"), "ABC\x00DEF", 'constains decoded null character';
 };
 
 subtest exceptions => sub {
