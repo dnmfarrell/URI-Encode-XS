@@ -55,47 +55,45 @@ static const char hextable[0x100] = {
 };
 #undef __
 
-size_t uri_encode (const char *uri, const size_t len, char *buffer)
+size_t uri_encode (const char *src, const size_t len, char *dst)
 {
-  unsigned char *uuri = (unsigned char*)uri;
   size_t i = 0, j = 0;
   while (i < len)
   {
-    const char * code = uri_encode_tbl[ uuri[i] ];
+    const char * code = uri_encode_tbl[ (unsigned char)src[i] ];
     if (code)
     {
-      memcpy(&buffer[j], code, 3);
+      memcpy(&dst[j], code, 3);
       j += 3;
     }
     else
     {
-      buffer[j] = uuri[i];
+      dst[j] = src[i];
       j++;
     }
     i++;
   }
-  buffer[j] = '\0';
+  dst[j] = '\0';
   return j;
 }
 
-size_t uri_decode (const char *uri, const size_t len, char *buffer)
+size_t uri_decode (const char *src, const size_t len, char *dst)
 {
   size_t i = 0, j = 0;
-  unsigned char *uuri = (unsigned char*)uri;
   while(i < len)
   {
-    if(uri[i] == '%')
+    if(src[i] == '%')
     {
       if (i + 2 < len)
       {
         /* thanks to Jesse DuMond */
-        char front = hextable[ uuri[i+1] ];
-        char back  = hextable[ uuri[i+2] ];
+        char front = hextable[ (unsigned char)src[i+1] ];
+        char back  = hextable[ (unsigned char)src[i+2] ];
 
         /* skip invalid hex sequences */
         if (front >= 0 && back >= 0)
         {
-          buffer[j] = front << 4 | back;
+          dst[j] = front << 4 | back;
           j++;
         }
         i += 3;
@@ -108,12 +106,12 @@ size_t uri_decode (const char *uri, const size_t len, char *buffer)
     }
     else
     {
-      buffer[j] = uuri[i];
+      dst[j] = src[i];
       i++;
       j++;
     }
   }
-  buffer[j] = '\0';
+  dst[j] = '\0';
   return j;
 }
 
