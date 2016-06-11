@@ -67,12 +67,11 @@ size_t uri_encode (const char *uri, const size_t len, char *buffer)
   return j;
 }
 
-char *uri_decode (char *uri, char *buffer)
+size_t uri_decode (const char *uri, const size_t len, char *buffer)
 {
-  int i = 0, j = 0;
-  int len = strlen(uri);
+  size_t i = 0, j = 0;
   unsigned char *uuri = (unsigned char*)uri;
-  while(uri[i])
+  while(i < len)
   {
     if(uri[i] == '%')
     {
@@ -104,7 +103,7 @@ char *uri_decode (char *uri, char *buffer)
     }
   }
   buffer[j] = '\0';
-  return buffer;
+  return j;
 }
 
 static void THX_uri_encode_dsv (pTHX_ const char *src, size_t len, SV *dsv)
@@ -124,8 +123,7 @@ static void THX_uri_decode_dsv (pTHX_ const char *src, size_t len, SV *dsv)
 
   SvUPGRADE(dsv, SVt_PV);
   dst = SvGROW(dsv, len + 1);
-  dst = uri_decode((char *)src, dst);
-  len = strlen(dst);
+  len = uri_decode(src, len, dst);
   SvCUR_set(dsv, len);
   SvPOK_only(dsv);
 }
