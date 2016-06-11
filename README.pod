@@ -11,19 +11,18 @@ URI::Encode::XS - a Perl URI encoder/decoder using C
 
 =head1 DESCRIPTION
 
-This is a Perl module that wraps my C URI encoder/decoder based on
-L<RFC3986|https://tools.ietf.org/html/rfc3986>. This module always
-encodes characters that are not unreserved.
+This is a Perl URI encoder/decoder written in XS based on L<RFC3986|https://tools.ietf.org/html/rfc3986>.
+This module always encodes characters that are not unreserved.
 
-I've benchmarked it and found it significantly faster than URI::Escape at
-encoding and decoding:
+As of version 0.07, the C<bench> script shows it to be significantly faster
+than C<URI::Escape>:
 
             Rate escape encode
-escape  130275/s     --   -96%
-encode 3581667/s  2649%     --
+escape   53944/s     --   -98%
+encode 3017653/s  5494%     --
               Rate unescape   decode
-unescape  189434/s       --     -96%
-decode   5161471/s    2625%       --
+unescape   74567/s       --     -97%
+decode   2697001/s    3517%       --
 
 However this is just one string - the fewer encoded/decoded characters are
 in the string, the closer the benchmark is likely to be (see C<bench> for
@@ -45,9 +44,15 @@ Or
   $ make test
   $ make install
 
-=head1 THANKS
+=head1 CONTRIBUTORS
 
-Thanks to Jesse DuMond for helping optimize the C code.
+=over4
+
+=item L<Christian Hansen|https://github.com/chansen>
+
+=item Jesse DuMond
+
+=back
 
 =head1 REPOSITORY
 
