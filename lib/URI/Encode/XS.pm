@@ -60,7 +60,7 @@ Or
 
 =head1 CONTRIBUTORS
 
-=over4
+=over 4
 
 =item * L<Christian Hansen|https://github.com/chansen>
 
