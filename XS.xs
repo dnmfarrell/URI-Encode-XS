@@ -159,6 +159,14 @@ uri_encode(SV *uri)
       croak("uri_encode() requires a scalar argument to encode!");
     }
     src = SvPV_nomg_const(uri, len);
+    if (SvUTF8(uri))
+    {
+      uri = sv_2mortal(newSVpvn(src, len));
+      SvUTF8_on(uri);
+      if (!sv_utf8_downgrade(uri, TRUE))
+          croak("Wide character in octet string");
+      src = SvPV_const(uri, len);
+    }
     uri_encode_dsv(src, len, TARG);
     PUSHTARG;
 
@@ -175,6 +183,14 @@ uri_decode(SV *uri)
       croak("uri_decode() requires a scalar argument to decode!");
     }
     src = SvPV_nomg_const(uri, len);
+    if (SvUTF8(uri))
+    {
+      uri = sv_2mortal(newSVpvn(src, len));
+      SvUTF8_on(uri);
+      if (!sv_utf8_downgrade(uri, TRUE))
+          croak("Wide character in octet string");
+      src = SvPV_const(uri, len);
+    }
     uri_decode_dsv(src, len, TARG);
     PUSHTARG;
 

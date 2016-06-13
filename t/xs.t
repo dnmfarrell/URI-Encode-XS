@@ -13,6 +13,10 @@ subtest encode => sub {
   is uri_encode("~*'()"), "~%2A%27%28%29";
   is uri_encode("<\">"), "%3C%22%3E";
   is uri_encode("ABC\x00DEF"), "ABC%00DEF", 'constains encoded null character';
+  {
+    use utf8;
+    is uri_encode("åäö"), '%E5%E4%F6', 'native characters (Latin1)';
+  }
 };
 
 subtest decode => sub {
@@ -32,8 +36,12 @@ subtest decode => sub {
 subtest exceptions => sub {
   eval { URI::Encode::XS::uri_encode(undef) };
   like $@, qr/uri_encode\(\) requires a scalar argument to encode!/, 'croak on undef';
+  eval { URI::Encode::XS::uri_encode("\x{263A}") };
+  like $@, qr/Wide character in octet string/, 'croak on non-octet string';
   eval { URI::Encode::XS::uri_decode(undef) };
   like $@, qr/uri_decode\(\) requires a scalar argument to decode!/, 'croak on undef';
+  eval { URI::Encode::XS::uri_decode("\x{263A}") };
+  like $@, qr/Wide character in octet string/, 'croak on non-octet string';
 };
 
 done_testing();
