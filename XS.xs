@@ -153,11 +153,12 @@ uri_encode(SV *uri)
     const char *src;
     size_t len;
   PPCODE:
+    SvGETMAGIC(uri);
     if (!SvOK(uri))
     {
       croak("uri_encode() requires a scalar argument to encode!");
     }
-    src = SvPV_const(uri, len);
+    src = SvPV_nomg_const(uri, len);
     uri_encode_dsv(src, len, TARG);
     PUSHTARG;
 
@@ -168,11 +169,12 @@ uri_decode(SV *uri)
     const char *src;
     size_t len;
   PPCODE:
+    SvGETMAGIC(uri);
     if (!SvOK(uri))
     {
       croak("uri_decode() requires a scalar argument to decode!");
     }
-    src = SvPV_const(uri, len);
+    src = SvPV_nomg_const(uri, len);
     uri_decode_dsv(src, len, TARG);
     PUSHTARG;
 
