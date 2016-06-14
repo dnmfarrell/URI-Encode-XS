@@ -82,28 +82,22 @@ size_t uri_decode (const char *src, const size_t len, char *dst)
   size_t i = 0, j = 0;
   while(i < len)
   {
-    if(src[i] == '%')
+    int copy_char = 1;
+    if(src[i] == '%' && i + 2 < len)
     {
-      if (i + 2 < len)
-      {
-        const unsigned char v1 = hexval[ (unsigned char)src[i+1] ];
-        const unsigned char v2 = hexval[ (unsigned char)src[i+2] ];
+      const unsigned char v1 = hexval[ (unsigned char)src[i+1] ];
+      const unsigned char v2 = hexval[ (unsigned char)src[i+2] ];
 
-        /* skip invalid hex sequences */
-        if ((v1 | v2) != 0xFF)
-        {
-          dst[j] = (v1 << 4) | v2;
-          j++;
-        }
-        i += 3;
-      }
-      /* skip trailing percent chars */
-      else
+      /* skip invalid hex sequences */
+      if ((v1 | v2) != 0xFF)
       {
-        i++;
+        dst[j] = (v1 << 4) | v2;
+        j++;
+        i += 3;
+        copy_char = 0;
       }
     }
-    else
+    if (copy_char)
     {
       dst[j] = src[i];
       i++;

@@ -22,9 +22,9 @@ subtest encode => sub {
 subtest decode => sub {
   is uri_decode(''), '';
   is uri_decode("something"), 'something';
-  is uri_decode("something%"), 'something', 'ignore trailing percent';
-  is uri_decode('something%a'), 'somethinga', 'ignore trailing percent';
-  is uri_decode('something%Z/'), 'something', 'ignore invalid sequences';
+  is uri_decode("something%"), 'something%', 'invalid sequences are copied';
+  is uri_decode('something%a'), 'something%a', 'invalid sequences are copied';
+  is uri_decode('something%Z/'), 'something%Z/', 'invalid sequences are copied';
   is uri_decode('%20'), ' ';
   is uri_decode('%25%2520'), "%%20";
   is uri_decode("%7Cabc%C3%A5"), "|abcå";
