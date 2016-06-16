@@ -62,17 +62,10 @@ size_t uri_encode (const char *src, const size_t len, char *dst)
   while (i < len)
   {
     const char * code = &uri_encode_tbl[ ESCSZ * (unsigned char)src[i] ];
-    if (*code)
-    {
-      memcpy(&dst[j], code, ESCSZ);
-      j += ESCSZ;
-    }
-    else
-    {
-      dst[j] = src[i];
-      j++;
-    }
-    i++;
+    dst[j++] = src[i++];
+    if (!*code) continue;
+    memcpy(&dst[j-1], code, ESCSZ);
+    j += ESCSZ - 1;
   }
   dst[j] = '\0';
   return j;
