@@ -108,10 +108,18 @@ static void THX_uri_encode_dsv (pTHX_ const char *src, size_t len, SV *dsv)
 {
   char *dst;
 
+  /* ensure dsv is a SVt_PV */
   SvUPGRADE(dsv, SVt_PV);
+
+  /* increase the size of dsv (only works on SVt_PV)
+     return pointer to char buffer */
   dst = SvGROW(dsv, len * 3 + 1);
   len = uri_encode(src, len, dst);
+
+  /* set the current length of dsv */
   SvCUR_set(dsv, len);
+
+  /* turn on string POK flag, turn off all other OK bits */
   SvPOK_only(dsv);
 }
 
@@ -119,16 +127,27 @@ static void THX_uri_decode_dsv (pTHX_ const char *src, size_t len, SV *dsv)
 {
   char *dst;
 
+  /* ensure dsv is a SVt_PV */
   SvUPGRADE(dsv, SVt_PV);
+
+  /* increase the size of dsv (only works on SVt_PV)
+     return pointer to char buffer */
   dst = SvGROW(dsv, len + 1);
   len = uri_decode(src, len, dst);
+
+  /* set the current length of dsv */
   SvCUR_set(dsv, len);
+
+  /* turn on string POK flag, turn off all other OK bits */
   SvPOK_only(dsv);
 }
 
+/* handle Perl context */
 #define uri_encode_dsv(src, len, dsv) \
   THX_uri_encode_dsv(aTHX_ src, len, dsv)
 
+
+/* handle Perl context */
 #define uri_decode_dsv(src, len, dsv) \
   THX_uri_decode_dsv(aTHX_ src, len, dsv)
 
@@ -139,48 +158,82 @@ PROTOTYPES: ENABLED
 void
 uri_encode(SV *uri)
   PREINIT:
+    /* declare TARG */
     dXSTARG;
     const char *src;
     size_t len;
   PPCODE:
+    /* call fetch() if a tied variable to populate the sv */
     SvGETMAGIC(uri);
+
+    /* check for undef */
     if (!SvOK(uri))
     {
       croak("uri_encode() requires a scalar argument to encode!");
     }
+
+    /* copy the sv without the magic struct */
     src = SvPV_nomg_const(uri, len);
+
+    /* if scalar contains any utf8 encoded data */
     if (SvUTF8(uri))
     {
+      /* make a temp copy */
       uri = sv_2mortal(newSVpvn(src, len));
+
+      /* turn on the utf8 flag */
       SvUTF8_on(uri);
+
+      /* if any of the characters don't fit into an octet ... */
       if (!sv_utf8_downgrade(uri, TRUE))
           croak("Wide character in octet string");
+
+      /* copy the SV */
       src = SvPV_const(uri, len);
     }
     uri_encode_dsv(src, len, TARG);
+
+    /* push TARG into return stack */
     PUSHTARG;
 
 void
 uri_decode(SV *uri)
   PREINIT:
+    /* declare TARG */
     dXSTARG;
     const char *src;
     size_t len;
   PPCODE:
+    /* call fetch() if a tied variable to populate the sv */
     SvGETMAGIC(uri);
+
+    /* check for undef */
     if (!SvOK(uri))
     {
       croak("uri_decode() requires a scalar argument to decode!");
     }
+
+    /* copy the sv without the magic struct */
     src = SvPV_nomg_const(uri, len);
+
+    /* if scalar contains any utf8 encoded data */
     if (SvUTF8(uri))
     {
+      /* make a temp copy */
       uri = sv_2mortal(newSVpvn(src, len));
+
+      /* turn on the utf8 flag */
       SvUTF8_on(uri);
+
+      /* if any of the characters don't fit into an octet ... */
       if (!sv_utf8_downgrade(uri, TRUE))
           croak("Wide character in octet string");
+
+      /* copy the SV */
       src = SvPV_const(uri, len);
     }
     uri_decode_dsv(src, len, TARG);
+
+    /* push TARG into return stack */
     PUSHTARG;
 
