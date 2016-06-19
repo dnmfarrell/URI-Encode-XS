@@ -7,6 +7,7 @@ WriteMakefile(
     ABSTRACT_FROM  => 'lib/URI/Encode/XS.pm',
     AUTHOR         => 'David Farrell',
     LIBS           => [''],
+    OPTIMIZE       => '-O3',
     DEFINE         => '',
     INC            => '-I.',
     LICENSE        => 'freebsd',
