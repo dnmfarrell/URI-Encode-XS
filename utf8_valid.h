@@ -27,8 +27,6 @@
 #define UTF8_VALID_H
 #include <stddef.h>
 #include <string.h>
-#include <stdint.h>
-#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,7 +35,7 @@ extern "C" {
 size_t
 utf8_maximal_subpart(const char *src, size_t len) {
   const unsigned char *cur = (const unsigned char *)src;
-  uint32_t v;
+  U32 v;
 
   if (len < 2)
     return len;
@@ -77,7 +75,7 @@ utf8_check(const char *src, size_t len, size_t *cursor) {
   const unsigned char *end = cur + len;
   const unsigned char *p;
   unsigned char buf[4];
-  uint32_t v;
+  U32 v;
 
   for (p = cur;;) {
     if (cur >= end - 3) {
