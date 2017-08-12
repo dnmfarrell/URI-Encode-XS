@@ -11,3 +11,10 @@ cmpthese(-10, {
     unescape => sub { URI::Escape::uri_unescape('https%3A%2F%2Fstackoverflow.com%2Fquestions%2F3629212%2Fhow%20can%20perls%20xsub%20die') },
     decode   => sub { URI::Encode::XS::uri_decode('https%3A%2F%2Fstackoverflow.com%2Fquestions%2F3629212%2Fhow%20can%20perls%20xsub%20die') },
   });
+__END__
+              Rate escape encode
+  escape  144165/s     --   -98%
+  encode 8239785/s  5616%     --
+                Rate unescape   decode
+  unescape  196870/s       --     -97%
+  decode   6051468/s    2974%       --
