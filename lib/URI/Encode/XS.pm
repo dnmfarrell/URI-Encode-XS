@@ -93,7 +93,7 @@ Or
 
 =item * L<URL::Encode|https://metacpan.org/pod/URL::Encode>
 
-=item * My article about the story of this module: L<The road to a 55x speedup with XS|http://perltricks.com/article/the-road-to-a-55x-speedup-with-xs/>
+=item * My article about the story of this module: L<The road to a 55x speedup with XS|https://www.perl.com/article/the-road-to-a-55x-speedup-with-xs/>
 
 =back
 
